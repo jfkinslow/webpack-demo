@@ -11,10 +11,7 @@ class Button {
 			event.preventDefault();
 			return false;
 		});
-		element.addEventListener('click', event => {
-			event.preventDefault();
-			this.onClick(event);
-		});
+		element.addEventListener('click', this.onClick);
 		return element;
 	}
 }

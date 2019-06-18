@@ -10,3 +10,6 @@ div.DM-Button:hover {
   background: black;
   color: white;
 }
+div.log {
+  display: inline;
+}

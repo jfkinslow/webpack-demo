@@ -3,8 +3,13 @@ class DisplayManager {
 		this.app = object.app;
 		this.children = [];
 	}
-	addChild(object, type) {
-		this.children.push({ object: object, type: type });
+	addChild(object, type, props) {
+		props = props || undefined;
+		if (props === undefined) {
+			this.children.push({ object: object, type: type });
+		} else {
+			this.children.push({ object: object, type: type, props: props });
+		}
 	}
 	clear() {
 		this.app.innerHTML = '';
@@ -14,7 +19,11 @@ class DisplayManager {
 			if (element.type === 'class') {
 				this.app.appendChild(element.object.render());
 			} else if (element.type === 'function') {
-				this.app.appendChild(element.object());
+				if (element.props === undefined) {
+					this.app.appendChild(element.object());
+				} else {
+					this.app.appendChild(element.object(element.props));
+				}
 			} else {
 				throw Error(`Type ${type} on Object ${object} is not an applicable value for this function`);
 			}
