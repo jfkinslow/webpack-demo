@@ -93,7 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("exports = module.exports = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ \"./node_modules/css-loader/dist/runtime/api.js\")(false);\n// Module\nexports.push([module.i, \"div.DM-Button {\\n  border: 1px solid black;\\n  padding: 20px;\\n  margin: 20px;\\n  max-width: 200px;\\n  text-align: center;\\n  cursor: pointer;\\n}\\ndiv.DM-Button:hover {\\n  background: black;\\n  color: white;\\n}\\n\", \"\"]);\n\n\n//# sourceURL=webpack:///./src/index.css?./node_modules/css-loader/dist/cjs.js");
+eval("exports = module.exports = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ \"./node_modules/css-loader/dist/runtime/api.js\")(false);\n// Module\nexports.push([module.i, \"div.DM-Button {\\n  border: 1px solid black;\\n  padding: 20px;\\n  margin: 20px;\\n  max-width: 200px;\\n  text-align: center;\\n  cursor: pointer;\\n}\\ndiv.DM-Button:hover {\\n  background: black;\\n  color: white;\\n}\\ndiv.log {\\n  display: inline;\\n}\\n\", \"\"]);\n\n\n//# sourceURL=webpack:///./src/index.css?./node_modules/css-loader/dist/cjs.js");
 
 /***/ }),
 
@@ -142,6 +142,61 @@ eval("\n/**\n * When source maps are enabled, `style-loader` uses a link element
 
 /***/ }),
 
+/***/ "./node_modules/uuid/index.js":
+/*!************************************!*\
+  !*** ./node_modules/uuid/index.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var v1 = __webpack_require__(/*! ./v1 */ \"./node_modules/uuid/v1.js\");\nvar v4 = __webpack_require__(/*! ./v4 */ \"./node_modules/uuid/v4.js\");\n\nvar uuid = v4;\nuuid.v1 = v1;\nuuid.v4 = v4;\n\nmodule.exports = uuid;\n\n\n//# sourceURL=webpack:///./node_modules/uuid/index.js?");
+
+/***/ }),
+
+/***/ "./node_modules/uuid/lib/bytesToUuid.js":
+/*!**********************************************!*\
+  !*** ./node_modules/uuid/lib/bytesToUuid.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * Convert array of 16 byte values to UUID string format of the form:\n * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX\n */\nvar byteToHex = [];\nfor (var i = 0; i < 256; ++i) {\n  byteToHex[i] = (i + 0x100).toString(16).substr(1);\n}\n\nfunction bytesToUuid(buf, offset) {\n  var i = offset || 0;\n  var bth = byteToHex;\n  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4\n  return ([bth[buf[i++]], bth[buf[i++]], \n\tbth[buf[i++]], bth[buf[i++]], '-',\n\tbth[buf[i++]], bth[buf[i++]], '-',\n\tbth[buf[i++]], bth[buf[i++]], '-',\n\tbth[buf[i++]], bth[buf[i++]], '-',\n\tbth[buf[i++]], bth[buf[i++]],\n\tbth[buf[i++]], bth[buf[i++]],\n\tbth[buf[i++]], bth[buf[i++]]]).join('');\n}\n\nmodule.exports = bytesToUuid;\n\n\n//# sourceURL=webpack:///./node_modules/uuid/lib/bytesToUuid.js?");
+
+/***/ }),
+
+/***/ "./node_modules/uuid/lib/rng-browser.js":
+/*!**********************************************!*\
+  !*** ./node_modules/uuid/lib/rng-browser.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("// Unique ID creation requires a high quality random # generator.  In the\n// browser this is a little complicated due to unknown quality of Math.random()\n// and inconsistent support for the `crypto` API.  We do the best we can via\n// feature-detection\n\n// getRandomValues needs to be invoked in a context where \"this\" is a Crypto\n// implementation. Also, find the complete implementation of crypto on IE11.\nvar getRandomValues = (typeof(crypto) != 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto)) ||\n                      (typeof(msCrypto) != 'undefined' && typeof window.msCrypto.getRandomValues == 'function' && msCrypto.getRandomValues.bind(msCrypto));\n\nif (getRandomValues) {\n  // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto\n  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef\n\n  module.exports = function whatwgRNG() {\n    getRandomValues(rnds8);\n    return rnds8;\n  };\n} else {\n  // Math.random()-based (RNG)\n  //\n  // If all else fails, use Math.random().  It's fast, but is of unspecified\n  // quality.\n  var rnds = new Array(16);\n\n  module.exports = function mathRNG() {\n    for (var i = 0, r; i < 16; i++) {\n      if ((i & 0x03) === 0) r = Math.random() * 0x100000000;\n      rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;\n    }\n\n    return rnds;\n  };\n}\n\n\n//# sourceURL=webpack:///./node_modules/uuid/lib/rng-browser.js?");
+
+/***/ }),
+
+/***/ "./node_modules/uuid/v1.js":
+/*!*********************************!*\
+  !*** ./node_modules/uuid/v1.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var rng = __webpack_require__(/*! ./lib/rng */ \"./node_modules/uuid/lib/rng-browser.js\");\nvar bytesToUuid = __webpack_require__(/*! ./lib/bytesToUuid */ \"./node_modules/uuid/lib/bytesToUuid.js\");\n\n// **`v1()` - Generate time-based UUID**\n//\n// Inspired by https://github.com/LiosK/UUID.js\n// and http://docs.python.org/library/uuid.html\n\nvar _nodeId;\nvar _clockseq;\n\n// Previous uuid creation time\nvar _lastMSecs = 0;\nvar _lastNSecs = 0;\n\n// See https://github.com/broofa/node-uuid for API details\nfunction v1(options, buf, offset) {\n  var i = buf && offset || 0;\n  var b = buf || [];\n\n  options = options || {};\n  var node = options.node || _nodeId;\n  var clockseq = options.clockseq !== undefined ? options.clockseq : _clockseq;\n\n  // node and clockseq need to be initialized to random values if they're not\n  // specified.  We do this lazily to minimize issues related to insufficient\n  // system entropy.  See #189\n  if (node == null || clockseq == null) {\n    var seedBytes = rng();\n    if (node == null) {\n      // Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)\n      node = _nodeId = [\n        seedBytes[0] | 0x01,\n        seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]\n      ];\n    }\n    if (clockseq == null) {\n      // Per 4.2.2, randomize (14 bit) clockseq\n      clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 0x3fff;\n    }\n  }\n\n  // UUID timestamps are 100 nano-second units since the Gregorian epoch,\n  // (1582-10-15 00:00).  JSNumbers aren't precise enough for this, so\n  // time is handled internally as 'msecs' (integer milliseconds) and 'nsecs'\n  // (100-nanoseconds offset from msecs) since unix epoch, 1970-01-01 00:00.\n  var msecs = options.msecs !== undefined ? options.msecs : new Date().getTime();\n\n  // Per 4.2.1.2, use count of uuid's generated during the current clock\n  // cycle to simulate higher resolution clock\n  var nsecs = options.nsecs !== undefined ? options.nsecs : _lastNSecs + 1;\n\n  // Time since last uuid creation (in msecs)\n  var dt = (msecs - _lastMSecs) + (nsecs - _lastNSecs)/10000;\n\n  // Per 4.2.1.2, Bump clockseq on clock regression\n  if (dt < 0 && options.clockseq === undefined) {\n    clockseq = clockseq + 1 & 0x3fff;\n  }\n\n  // Reset nsecs if clock regresses (new clockseq) or we've moved onto a new\n  // time interval\n  if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === undefined) {\n    nsecs = 0;\n  }\n\n  // Per 4.2.1.2 Throw error if too many uuids are requested\n  if (nsecs >= 10000) {\n    throw new Error('uuid.v1(): Can\\'t create more than 10M uuids/sec');\n  }\n\n  _lastMSecs = msecs;\n  _lastNSecs = nsecs;\n  _clockseq = clockseq;\n\n  // Per 4.1.4 - Convert from unix epoch to Gregorian epoch\n  msecs += 12219292800000;\n\n  // `time_low`\n  var tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;\n  b[i++] = tl >>> 24 & 0xff;\n  b[i++] = tl >>> 16 & 0xff;\n  b[i++] = tl >>> 8 & 0xff;\n  b[i++] = tl & 0xff;\n\n  // `time_mid`\n  var tmh = (msecs / 0x100000000 * 10000) & 0xfffffff;\n  b[i++] = tmh >>> 8 & 0xff;\n  b[i++] = tmh & 0xff;\n\n  // `time_high_and_version`\n  b[i++] = tmh >>> 24 & 0xf | 0x10; // include version\n  b[i++] = tmh >>> 16 & 0xff;\n\n  // `clock_seq_hi_and_reserved` (Per 4.2.2 - include variant)\n  b[i++] = clockseq >>> 8 | 0x80;\n\n  // `clock_seq_low`\n  b[i++] = clockseq & 0xff;\n\n  // `node`\n  for (var n = 0; n < 6; ++n) {\n    b[i + n] = node[n];\n  }\n\n  return buf ? buf : bytesToUuid(b);\n}\n\nmodule.exports = v1;\n\n\n//# sourceURL=webpack:///./node_modules/uuid/v1.js?");
+
+/***/ }),
+
+/***/ "./node_modules/uuid/v4.js":
+/*!*********************************!*\
+  !*** ./node_modules/uuid/v4.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var rng = __webpack_require__(/*! ./lib/rng */ \"./node_modules/uuid/lib/rng-browser.js\");\nvar bytesToUuid = __webpack_require__(/*! ./lib/bytesToUuid */ \"./node_modules/uuid/lib/bytesToUuid.js\");\n\nfunction v4(options, buf, offset) {\n  var i = buf && offset || 0;\n\n  if (typeof(options) == 'string') {\n    buf = options === 'binary' ? new Array(16) : null;\n    options = null;\n  }\n  options = options || {};\n\n  var rnds = options.random || (options.rng || rng)();\n\n  // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`\n  rnds[6] = (rnds[6] & 0x0f) | 0x40;\n  rnds[8] = (rnds[8] & 0x3f) | 0x80;\n\n  // Copy bytes to buffer, if provided\n  if (buf) {\n    for (var ii = 0; ii < 16; ++ii) {\n      buf[i + ii] = rnds[ii];\n    }\n  }\n\n  return buf || bytesToUuid(rnds);\n}\n\nmodule.exports = v4;\n\n\n//# sourceURL=webpack:///./node_modules/uuid/v4.js?");
+
+/***/ }),
+
 /***/ "./node_modules/webpack/buildin/global.js":
 /*!***********************************!*\
   !*** (webpack)/buildin/global.js ***!
@@ -172,7 +227,7 @@ eval("module.exports = function(module) {\n\tif (!module.webpackPolyfill) {\n\t\
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\nclass DisplayManager {\r\n\tconstructor(object) {\r\n\t\tthis.app = object.app;\r\n\t\tthis.children = [];\r\n\t}\r\n\taddChild(object, type) {\r\n\t\tthis.children.push({ object: object, type: type });\r\n\t}\r\n\tclear() {\r\n\t\tthis.app.innerHTML = '';\r\n\t}\r\n\trender(renderableObject, type) {\r\n\t\tthis.children.forEach(element => {\r\n\t\t\tif (element.type === 'class') {\r\n\t\t\t\tthis.app.appendChild(element.object.render());\r\n\t\t\t} else if (element.type === 'function') {\r\n\t\t\t\tthis.app.appendChild(element.object());\r\n\t\t\t} else {\r\n\t\t\t\tthrow Error(`Type ${type} on Object ${object} is not an applicable value for this function`);\r\n\t\t\t}\r\n\t\t});\r\n\t}\r\n}\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = (DisplayManager);\r\n\n\n//# sourceURL=webpack:///./src/DisplayManager/DisplayManager.js?");
+eval("__webpack_require__.r(__webpack_exports__);\nclass DisplayManager {\r\n\tconstructor(object) {\r\n\t\tthis.app = object.app;\r\n\t\tthis.children = [];\r\n\t}\r\n\taddChild(object, type, props) {\r\n\t\tprops = props || undefined;\r\n\t\tif (props === undefined) {\r\n\t\t\tthis.children.push({ object: object, type: type });\r\n\t\t} else {\r\n\t\t\tthis.children.push({ object: object, type: type, props: props });\r\n\t\t}\r\n\t}\r\n\tclear() {\r\n\t\tthis.app.innerHTML = '';\r\n\t}\r\n\trender(renderableObject, type) {\r\n\t\tthis.children.forEach(element => {\r\n\t\t\tif (element.type === 'class') {\r\n\t\t\t\tthis.app.appendChild(element.object.render());\r\n\t\t\t} else if (element.type === 'function') {\r\n\t\t\t\tif (element.props === undefined) {\r\n\t\t\t\t\tthis.app.appendChild(element.object());\r\n\t\t\t\t} else {\r\n\t\t\t\t\tthis.app.appendChild(element.object(element.props));\r\n\t\t\t\t}\r\n\t\t\t} else {\r\n\t\t\t\tthrow Error(`Type ${type} on Object ${object} is not an applicable value for this function`);\r\n\t\t\t}\r\n\t\t});\r\n\t}\r\n}\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = (DisplayManager);\r\n\n\n//# sourceURL=webpack:///./src/DisplayManager/DisplayManager.js?");
 
 /***/ }),
 
@@ -184,7 +239,19 @@ eval("__webpack_require__.r(__webpack_exports__);\nclass DisplayManager {\r\n\tc
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\nclass Button {\r\n\tconstructor(object) {\r\n\t\tthis.onClick = object.onClick;\r\n\t\tthis.text = object.text;\r\n\t}\r\n\trender() {\r\n\t\tconst element = document.createElement('div');\r\n\t\telement.classList.add('DM-Button');\r\n\t\telement.innerText = this.text;\r\n\t\telement.addEventListener('selectstart', event => {\r\n\t\t\tevent.preventDefault();\r\n\t\t\treturn false;\r\n\t\t});\r\n\t\telement.addEventListener('click', event => {\r\n\t\t\tevent.preventDefault();\r\n\t\t\tthis.onClick(event);\r\n\t\t});\r\n\t\treturn element;\r\n\t}\r\n}\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = (Button);\r\n\n\n//# sourceURL=webpack:///./src/components/Button.js?");
+eval("__webpack_require__.r(__webpack_exports__);\nclass Button {\r\n\tconstructor(object) {\r\n\t\tthis.onClick = object.onClick;\r\n\t\tthis.text = object.text;\r\n\t}\r\n\trender() {\r\n\t\tconst element = document.createElement('div');\r\n\t\telement.classList.add('DM-Button');\r\n\t\telement.innerText = this.text;\r\n\t\telement.addEventListener('selectstart', event => {\r\n\t\t\tevent.preventDefault();\r\n\t\t\treturn false;\r\n\t\t});\r\n\t\telement.addEventListener('click', this.onClick);\r\n\t\treturn element;\r\n\t}\r\n}\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = (Button);\r\n\n\n//# sourceURL=webpack:///./src/components/Button.js?");
+
+/***/ }),
+
+/***/ "./src/components/DivLog.js":
+/*!**********************************!*\
+  !*** ./src/components/DivLog.js ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\nconst DivLog = props => {\r\n\tlet el = document.createElement('div');\r\n\tel.innerHTML = `${props.logName} Log<hr />`;\r\n\tel.id = props.id;\r\n\tel.classList.add('log');\r\n\tel.classList.add(props.primaryClass);\r\n\treturn el;\r\n};\r\n\r\n/* harmony default export */ __webpack_exports__[\"default\"] = (DivLog);\r\n\n\n//# sourceURL=webpack:///./src/components/DivLog.js?");
 
 /***/ }),
 
@@ -207,7 +274,7 @@ eval("\nvar content = __webpack_require__(/*! !../node_modules/css-loader/dist/c
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ \"./node_modules/lodash/lodash.js\");\n/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utilities */ \"./src/utilities.js\");\n/* harmony import */ var _DisplayManager_DisplayManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DisplayManager/DisplayManager */ \"./src/DisplayManager/DisplayManager.js\");\n/* harmony import */ var _components_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Button */ \"./src/components/Button.js\");\n/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./index.css */ \"./src/index.css\");\n/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_index_css__WEBPACK_IMPORTED_MODULE_4__);\n// Node Modules\r\n\r\n// User Modules\r\n\r\n\r\n\r\n//Styles\r\n\r\nlet firstButton = new _components_Button__WEBPACK_IMPORTED_MODULE_3__[\"default\"]({\r\n\ttext: 'This is a button',\r\n\tonClick: event => {\r\n\t\tconsole.log('You clicked the first button');\r\n\t},\r\n});\r\nlet secondButton = new _components_Button__WEBPACK_IMPORTED_MODULE_3__[\"default\"]({\r\n\ttext: 'This is a button',\r\n\tonClick: event => {\r\n\t\tconsole.log('You clicked the second button');\r\n\t},\r\n});\r\nconst displayManager = new _DisplayManager_DisplayManager__WEBPACK_IMPORTED_MODULE_2__[\"default\"]({\r\n\tapp: document.querySelector('div.App'),\r\n});\r\ndisplayManager.addChild(firstButton, 'class');\r\ndisplayManager.addChild(secondButton, 'class');\r\ndisplayManager.render();\r\n\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ \"./node_modules/lodash/lodash.js\");\n/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! uuid */ \"./node_modules/uuid/index.js\");\n/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(uuid__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utilities */ \"./src/utilities.js\");\n/* harmony import */ var _DisplayManager_DisplayManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./DisplayManager/DisplayManager */ \"./src/DisplayManager/DisplayManager.js\");\n/* harmony import */ var _components_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/Button */ \"./src/components/Button.js\");\n/* harmony import */ var _components_DivLog__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/DivLog */ \"./src/components/DivLog.js\");\n/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./index.css */ \"./src/index.css\");\n/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_index_css__WEBPACK_IMPORTED_MODULE_6__);\n// Node Modules\r\n\r\n\r\n// User Modules\r\n\r\n\r\n\r\n\r\n//Styles\r\n\r\nlet firstButton = new _components_Button__WEBPACK_IMPORTED_MODULE_4__[\"default\"]({\r\n\ttext: 'This is a button',\r\n\tid: uuid__WEBPACK_IMPORTED_MODULE_1___default()(),\r\n\tonClick: event => {\r\n\t\tevent.preventDefault();\r\n\t\tconsole.log('You clicked the first button');\r\n\t\tlet log = document.querySelector('.btn1-log');\r\n\t\tconsole.log(log);\r\n\t\tlog.innerHTML += 'You Clicked Me!<br />';\r\n\t},\r\n});\r\nlet secondButton = new _components_Button__WEBPACK_IMPORTED_MODULE_4__[\"default\"]({\r\n\ttext: 'This is a button',\r\n\tid: uuid__WEBPACK_IMPORTED_MODULE_1___default()(),\r\n\tonClick: event => {\r\n\t\tevent.preventDefault();\r\n\t\tconsole.log('You clicked the second button');\r\n\t\tlet log = document.querySelector('.btn2-log');\r\n\t\tconsole.log(log);\r\n\t\tlog.innerHTML += 'You Clicked Me!<br />';\r\n\t},\r\n});\r\nconst displayManager = new _DisplayManager_DisplayManager__WEBPACK_IMPORTED_MODULE_3__[\"default\"]({\r\n\tapp: document.querySelector('div.App'),\r\n});\r\ndisplayManager.addChild(firstButton, 'class');\r\ndisplayManager.addChild(_components_DivLog__WEBPACK_IMPORTED_MODULE_5__[\"default\"], 'function', { id: uuid__WEBPACK_IMPORTED_MODULE_1___default()(), primaryClass: 'btn1-log', logName: 'Button 1' });\r\ndisplayManager.addChild(secondButton, 'class');\r\ndisplayManager.addChild(_components_DivLog__WEBPACK_IMPORTED_MODULE_5__[\"default\"], 'function', { id: uuid__WEBPACK_IMPORTED_MODULE_1___default()(), primaryClass: 'btn2-log', logName: 'Button 2' });\r\ndisplayManager.render();\r\n\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ }),
 
